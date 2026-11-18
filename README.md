@@ -5,28 +5,47 @@ In diesem Repository befinden sich meine **Snippet-Dateien** für die Visual Stu
 ## Installation (macOS)
 
 1. Installiere die Erweiterung [HyperSnipsV2](https://marketplace.visualstudio.com/items?itemName=Oskar-Idland.HyperSnipsV2).
-2. Führe im Terminal aus:
+2. Repository clonen:
 
-```zsh
-mkdir -p "$HOME/Library/Application Support/Code/User/hsnips"
-cd "$HOME/Library/Application Support/Code/User/hsnips"
-for f in * .[^.]*; do mv "$f" "$HOME/Desktop/alte-$f"; done
+### Ganzes Repository klonen
 
-git clone https://github.com/04joh/vscode-snippets .
+```bash
+(
+  mkdir -p "$HOME/Library/Application Support/Code/User/hsnips"
+  cd "$HOME/Library/Application Support/Code/User/hsnips"
+  setopt null_glob 2>/dev/null || shopt -s nullglob
+  for f in * .[^.]*; do mv "$f" "$HOME/Desktop/alte-$f"; done
+  git clone https://github.com/04joh/vscode-snippets .
+)
 ```
 
-Bereits vorhandene Dateien werden dabei als `alte-<Dateiname>` auf den Schreibtisch verschoben. Falls der Ordner noch leer ist, kannst du die Fehlermeldung `no matches found: *` ignorieren.
+Bereits vorhandene Dateien werden dabei als `alte-<Dateiname>` auf den Schreibtisch verschoben. 
 
+### Nur einzelne Snippet-Dateien klonen
+Beispielsweise `latex.hsnips` und `lean4.hsnips`:
 
-**Alternativ:** Öffne den hsnips-Ordner, stelle sicher, dass er leer ist, und führe dort aus:
+```bash
+(
+  mkdir -p "$HOME/Library/Application Support/Code/User/hsnips"
+  cd "$HOME/Library/Application Support/Code/User/hsnips"
+  setopt null_glob 2>/dev/null || shopt -s nullglob
+  for f in * .[^.]*; do mv "$f" "$HOME/Desktop/alte-$f"; done
+  git clone --filter=blob:none --no-checkout https://github.com/04joh/vscode-snippets .
+  git sparse-checkout set --no-cone /latex.hsnips /lean4.hsnips
+  git checkout main
+)
+```
 
-```zsh
+### Alternative
+Öffne den hsnips-Ordner, stelle sicher, dass er komplett leer ist, und führe dort aus:
+
+```bash
 git clone https://github.com/04joh/vscode-snippets .
 ```
 
 ## Aktualisieren
 
-```zsh
+```bash
 cd "$HOME/Library/Application Support/Code/User/hsnips"
 git pull
 ```
