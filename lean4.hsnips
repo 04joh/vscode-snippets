@@ -1,0 +1,802 @@
+
+// JavaScript Variablen, die in jedem JavaScript-Snippet-Block verfügbar sind
+
+global
+const greek = {
+    alpha:"α", beta:"β", gamma:"γ", delta:"δ", eps:"ε", zeta:"ζ",
+    eta:"η", theta:"θ", iota:"ι", kappa:"κ", lambda:"λ", mu:"μ",
+    nu:"ν", xi:"ξ", omicron:"ο", pi:"π", rho:"ρ", sigma:"σ",
+    tau:"τ", upsilon:"υ", phi:"φ", chi:"χ", psi:"ψ", omega:"ω",
+    // Ausnahmen
+    lamm:"λ", muu:"μ", nuu:"ν", pii:"π", tauu:"τ", omegaa:"ω" };
+const upper = {
+    alpha:"Α", beta:"Β", gamma:"Γ", delta:"Δ", eps:"Ε", zeta:"Ζ",
+    eta:"Η", theta:"Θ", iota:"Ι", kappa:"Κ", lambda:"Λ", mu:"Μ",
+    nu:"Ν", xi:"Ξ", omicron:"Ο", pi:"Π", rho:"Ρ", sigma:"Σ",
+    tau:"Τ", upsilon:"Υ", phi:"Φ", chi:"Χ", psi:"Ψ", omega:"Ω",
+    // Ausnahmen
+    gammaa:"Γ", lamm:"Λ" };
+const names = Object.keys(greek).join("|");
+endglobal
+// Ausnahmen (Trigger vom Snippet muss angepasst werden und angepasster name ganz oben in global ergänzt werden):
+// Gammaa statt Gamma
+// lamm/Lamm zusätzlich zu lambda/Lambda
+// muu statt mu
+// nuu statt nu
+// pii statt pi
+// tauu statt tau
+// omegaa statt omega
+
+
+
+// Slash und Backslash tauschen
+
+snippet / "backslash statt slash" Ai
+\\
+endsnippet
+snippet \ "slash statt backslash" Ai
+/
+endsnippet
+
+
+
+// Griechische Buchstaben
+
+snippet `\b(alpha|beta|gamma|delta|eps|zeta|eta|theta|iota|kappa|lambda|lamm|muu|nuu|xi|omicron|pii|rho|sigma|tauu|upsilon|phi|chi|psi|omegaa|Alpha|Beta|Gammaa|Delta|Eps|Zeta|Eta|Theta|Iota|Kappa|Lambda|Lamm|Mu|Nu|Xi|Omicron|Pi|Rho|Sigma|Tau|Upsilon|Phi|Chi|Psi|Omega)` "Griechische Buchstaben" iA
+``rv = (m[1][0] === m[1][0].toUpperCase()) ? upper[m[1].toLowerCase()] : greek[m[1].toLowerCase()]``
+endsnippet
+// Ausnahmen (Trigger vom Snippet muss angepasst werden und angepasster name ganz oben in global ergänzt werden):
+// Gammaa statt Gamma
+// lamm/Lamm zusätzlich zu lambda/Lambda
+// muu statt mu
+// nuu statt nu
+// pii statt pi
+// tauu statt tau
+// omegaa statt omega
+
+
+
+// Grundlagen
+
+snippet `\b(?:maps|\|->|⊢>)` "Funktion wird abgebildet auf (maps)" iA
+↦
+endsnippet
+
+snippet -> "Implies Pfeil" iA
+→
+endsnippet
+
+snippet <- "Rückwärts / Impliziert von / Back" iA
+←
+endsnippet
+
+snippet ←> "Left right Arrow / Äquivalent / Äquivalenz Zeichen" iA
+↔
+endsnippet
+
+snippet `(?:\buparrow|\^\|)` "Pfeil nach oben für coersion" iA
+↑
+endsnippet
+
+snippet <= "Kleiner gleich" iA
+≤
+endsnippet
+
+snippet >= "Größer gleich" iA
+≥
+endsnippet
+
+snippet `\b(?:!=|¬=)` "Ungleich" iA
+≠
+endsnippet
+
+snippet `\b(?:3=|==|§=)` "Kongruenz" iA
+≡
+endsnippet
+
+snippet `~=|equiv|simeq` "Äquivalenz" iA
+≃
+endsnippet
+
+snippet `\b(?:dot|ii)` "Auflistungspunkt" iA
+·
+endsnippet // Auflistungspunkte siehe itm
+
+snippet circ "Verknüpfung Kreis" iA
+∘
+endsnippet
+
+snippet land "Logisches Und" iA
+∧
+endsnippet
+
+snippet lor "Logisches Oder" iA
+∨
+endsnippet
+
+snippet `\b(?:not|lnot)` "Logisches Nicht" wA
+¬
+endsnippet
+
+snippet `\b(?:\|- |vdash|goal)` "Ziel" iA
+⊢
+endsnippet
+
+snippet `\b(?:top )` "Immer wahr" iA
+⊤
+endsnippet
+
+snippet `\b(?:bot )` "Immer falsch" iA
+⊥
+endsnippet
+
+snippet `\b(?:scal|langle)` "Skalarprodukt Klammern" iA
+⟨${1:${VISUAL}}⟩
+endsnippet
+
+snippet `\b(?:floor|abrunden)` "Abrunden / Floor" iA
+⌊${1:${VISUAL}}⌋
+endsnippet
+
+snippet `\b(?:abs|betrag)` "Betrag" iA
+|${1:${VISUAL}}|
+endsnippet
+
+snippet `\b(?:normm|\|\|)` "Norm" iA
+‖${1:${VISUAL}}‖
+endsnippet
+
+snippet ;; "Semikolon für Constructor" iA
+<;>
+endsnippet
+
+snippet ?? "Platzhalter für refine" iA
+?_
+endsnippet
+
+snippet sqrt "Wurzel" iA
+√
+endsnippet
+
+snippet `\b(?:ooo|infty|unendlich)` "Unendlich" iA
+∞
+endsnippet
+
+snippet `\b(?:sum|∑me)` "Summenzeichen, nicht Sigma!" iA
+∑
+endsnippet
+
+snippet `\b(?:prod|∏ukt)` "Produktzeichen, nicht Pi!" iA
+∏
+endsnippet
+
+snippet dint "Integral" iA
+∫
+endsnippet
+
+snippet teilt "Teilt, nicht |, sondern ∣" iA
+∣
+endsnippet
+
+
+
+// Indizes und Exponenten
+
+snippet `_(\d)` "Tiefgestellte Ziffer" iA
+``rv = "₀₁₂₃₄₅₆₇₈₉"[m[1]]``
+endsnippet
+
+snippet `([₀₁₂₃₄₅₆₇₈₉])(\d+)` "Weitere tiefgestellte Ziffern" iA
+``rv = m[1] + [...m[2]].map(d => "₀₁₂₃₄₅₆₇₈₉"[d]).join("")``
+endsnippet
+
+snippet `\^(-?)(\d)` "Hochgestellte negative Ziffer" iA // eventuell das ? entfernen, damit nur ^-n klappt
+``rv = ((m[1] == "-") ? "⁻" : "") + "⁰¹²³⁴⁵⁶⁷⁸⁹"[m[2]]``
+endsnippet
+
+snippet `([⁰¹²³⁴⁵⁶⁷⁸⁹])(\d+)` "Weitere hochgestellte Ziffern" iA
+``rv = m[1] + [...m[2]].map(d => "⁰¹²³⁴⁵⁶⁷⁸⁹"[d]).join("")``
+endsnippet
+
+
+
+// Operatoren
+
+snippet AA "For all / Für alle" iA
+∀
+endsnippet
+
+snippet EE "Exists / Es existiert" iA
+∃
+endsnippet
+
+
+
+// Mengen
+
+snippet NN "Natürliche Zahlen" iA
+ℕ
+endsnippet
+
+snippet RR "Reelle Zahlen" iA
+ℝ
+endsnippet
+
+snippet ZZ "Ganze Zahlen" iA
+ℤ
+endsnippet
+
+snippet QQ "Rationale Zahlen" iA
+ℚ
+endsnippet
+
+snippet CC "Komplexe Zahlen" iA
+ℂ
+endsnippet
+
+snippet `\b(?:power|potm|PP)` "Powerset / Potenzmenge" iA
+𝒫
+endsnippet
+
+snippet inn "Element von / Element in" iA
+∈
+endsnippet
+
+snippet ¬in "Nicht Element von / Element in" iA
+∉
+endsnippet
+
+snippet subb "Subset / Echte Teilmenge" iA
+⊂
+endsnippet
+
+snippet ⊂eq "Subseteq / Unechte Teilmenge (subbeq)" iA
+⊆
+endsnippet
+
+snippet uuu "Cup / Vereinigung" iA
+∪
+endsnippet
+
+snippet UUU "Big Cup / Vereinigung" iA
+⋃
+endsnippet
+
+snippet ⋃0 "Vereinigung über Menge an Mengen" iA
+⋃₀
+endsnippet
+
+snippet nnn "Cap / Schnitt" iA
+∩
+endsnippet
+
+snippet ℕN "Big Cap / Schnitt" iA
+⋂
+endsnippet
+
+snippet ⋂0 "Schnitt über Menge an Mengen" iA
+⋂₀
+endsnippet
+
+snippet `\b(?:minuss)` "Mengendifferenz / A ohne B" iA
+\\
+endsnippet
+
+snippet div "Geteilt durch" iA
+/
+endsnippet
+
+snippet kompl "Komplement" iA
+ᶜ
+endsnippet
+
+snippet `\b(?:emptys|OO|∅(et))` "Leere Menge" iA
+∅
+endsnippet
+
+snippet `\b(?:xx|times)` "Kreuzprodukt" iA
+×
+endsnippet
+
+
+
+// Für die Abgabe
+
+snippet `\b(?:name|Niklas|niklas|Johannes|johannes|Tom|tom)` "Name für die Abgabe" Ah
+``
+const dateiname = (path ?? "").toLowerCase();
+const triggername = m[0].toLowerCase();
+const usernamen = {tom: "Tom Finken", johannes: "Johannes Peters", niklas: "Niklas Broicher"};
+let username = "name";
+let echtername = "name";
+for (const [key, value] of Object.entries(usernamen)) {
+    if (dateiname.includes(key)) {
+        username = key;
+        echtername = value;
+    }
+}
+let ausgabe = "undefiniert";
+if (triggername == username || triggername == "name") {
+    ausgabe = `${echtername}`;
+} else {
+    ausgabe = `Hallo ${echtername}, du bist garnicht ${usernamen[triggername]}`;
+}
+rv = ausgabe;
+``
+endsnippet
+
+
+
+// Einfache Befehle
+
+snippet `\b(?:sry|schere)` "sorry" iA
+sorry
+endsnippet
+
+snippet rw "rewrite" iA
+rw [$1]
+endsnippet
+
+snippet `\b(?:rw \[a )` "rwa" iA
+rwa [$0
+endsnippet
+
+snippet `\b(?:rw \[b )` "rewrite rückwärts / rw back" iA
+rw [← $0
+endsnippet
+
+snippet `\b(?:assump|assumption)` "show_term assumption" iA
+show_term assumption
+endsnippet
+
+snippet `\b(?:apy|aply)` "Apply" iA
+apply
+endsnippet
+
+snippet `(lina|linarith[rith])` "Linarith" iA
+linarith
+endsnippet
+
+snippet `\b(?:refi|refine(ne))` "Refine" iA
+refine
+endsnippet
+
+snippet as∑e "Assume" iA
+assume
+endsnippet
+
+snippet `(?<!#)\b(check|eval|synth|print|click_suggestions|leansearch|loogle)` "Alles mit # (check|eval|synth|print|click_suggestions|leansearch|loogle). # wird automatisch ergänzt" A
+``rv = "#" + m[1]``
+endsnippet
+
+
+
+// Komplexere Snippets
+
+snippet itm "Auflistungspunkt" iA
+· ${1:${VISUAL}}
+· $2
+endsnippet
+
+snippet `(?:;cons|\bconstructor <;> (t|r |ruc|uc|or))` "Constructor mit Semikolon und Auflistungspunkten" iAM
+constructor <;>
+endsnippet
+
+snippet `· constr` "constructor mit zwei Auflistungspunkten" iA
+· constructor
+  · ${1:${VISUAL}}
+  · $2
+endsnippet
+
+snippet constr "constructor mit zwei Auflistungspunkten" iA
+constructor
+· ${1:${VISUAL}}
+· $2
+endsnippet
+
+snippet `\b(?:constructor\n[ \t]*·[ \t]*(uc|tor))` "constructor mit zwei Auflistungspunkten" iAM
+constructor
+· ${0:${VISUAL}}
+endsnippet
+
+snippet |obtain "Obtain mit Oder" iA
+obtain ${2:${VISUAL}} | $3 := $1
+· $4
+· $5
+endsnippet
+
+snippet obtain "Obtain mit Klammern" iA
+obtain ⟨${2:${VISUAL}}⟩ := $1
+endsnippet
+
+snippet #ls "Lean Search" iA
+#leansearch ``rv = '"'``${1:${VISUAL}}.``rv = '"'``
+endsnippet
+
+snippet alle "Die häufigsten Taktiken zur Auswahl bereitstellen" iA
+${1|show_term,ring,ext,order,norm_num,norm_cast,push_cast,gcongr,congr,tauto,lia,positivity,field_simp,by_contra,exfalso,contrapose,push Not,by_cases,contradiction,grw,ring_nf,simp,simp only,unfold,rfl,linarith,assumption,use,specialize,have,calc,left,right,refine,let,open,#click_suggestions,exact,apply,rintro,rcases,nlinarith,omega,done|}
+endsnippet
+
+snippet lemma "Lemma" wA
+lemma ${1:name} ${2:(x : ℝ)} : ${3:ziel} := by
+  ${0:sorry}
+endsnippet
+
+snippet induction "Induktion" iA
+induction $1
+|
+endsnippet
+
+snippet claudealt "Lokales Modell fragen" wA
+``
+const fs = require("fs");
+const { fileURLToPath } = require("url");
+const { spawnSync } = require("child_process");
+
+const MODELL = "qwen2.5-coder:7b";
+const SYSTEM_PROMPT = `
+You are an expert Lean 4 theorem prover specializing in Mathlib.
+
+Your task is to replace the LAST occurrence of the exact placeholder
+"claude" in the provided Lean source file with a valid Lean 4 proof.
+
+STRICT RULES:
+- Return ONLY the replacement code.
+- No explanations, comments, Markdown or code fences.
+- The result must compile with Lean 4 and Mathlib.
+- Use the existing variables, hypotheses and local context.
+- Do not change anything outside the placeholder.
+- Never use sorry, admit, or other placeholders.
+- Do not invent assumptions or unavailable declarations.
+- Prefer existing Mathlib lemmas over lengthy manual proofs.
+- Use exact Lean 4 syntax.
+- Preserve the syntactic structure required at the insertion point.
+- If a tactic proof is appropriate, return the necessary tactic code.
+- Do not return the word "claude".
+
+Your output will be inserted directly into the source file.
+`;
+
+try {
+  const dateipfad = path.startsWith("file://") ? fileURLToPath(path) : path;
+  const kontext = fs.readFileSync(dateipfad, "utf8");
+
+  const body = JSON.stringify({
+    model: MODELL,
+    stream: false,
+    messages: [
+    //   { role: "system", content: "Du hilfst bei Lean-4-Beweisen mit Mathlib. Antworte ausschließlich mit Lean-Code, ohne Erklärung und ohne Markdown." },
+      { role: "system", content: SYSTEM_PROMPT },
+    //   { role: "user", content: "Hier ist die Datei:\n\n" + kontext + "\n\nErsetze das nur letzte claude durch einen Beweis in Lean4. Gib nur den einzusetzenden Code zurück, der anstelle von 'claude' dort stehen soll" }
+      { role: "user",
+        content: `
+        Here is the complete Lean 4 source file.
+
+        <LEAN_SOURCE>
+        ${kontext}
+        </LEAN_SOURCE>
+
+        Find the LAST occurrence of the exact placeholder "claude".
+
+        Determine the complete local proof context, including:
+        - The theorem statement
+        - All available hypotheses
+        - Local variables
+        - Relevant definitions
+        - The surrounding Lean syntax
+
+        Return ONLY the Lean code that must replace that final occurrence.
+        Do not repeat any surrounding source code.
+        `
+      }
+    ]
+  });
+
+  const res = spawnSync("/usr/bin/curl", [
+    "-sS", "--max-time", "3000",
+    "http://localhost:11434/api/chat",
+    "-d", "@-"
+  ], { input: body, encoding: "utf8", maxBuffer: 10 * 1024 * 1024 });
+
+  if (res.error) {
+    rv = "-- Fehler: " + res.error.message;
+  } else if (res.status !== 0) {
+    rv = "-- Fehler (läuft Ollama?): " + res.stderr;
+  } else {
+    const data = JSON.parse(res.stdout);
+    if (data.error) {
+      rv = "-- Fehler: " + data.error;
+    } else {
+      rv = data.message.content.replace(/\x60{3}[a-z0-9]*\n?/gi, "").trim();
+    }
+  }
+} catch (e) {
+  rv = "-- Fehler: " + e.message;
+}
+``
+endsnippet
+
+
+
+
+#snippet claude "Lokales Modell fragen" wA
+``
+const fs = require("fs");
+const { fileURLToPath } = require("url");
+const { spawnSync } = require("child_process");
+
+const MODELL = "qwen2.5-coder:7b";
+
+const SYSTEM_PROMPT = `
+You are an expert Lean 4 theorem prover specializing in Mathlib.
+
+Your task is to replace the LAST occurrence of the exact placeholder
+"claude" in the provided Lean source file with a valid Lean 4 proof.
+
+STRICT RULES:
+- Return ONLY the replacement Lean code.
+- Do not include explanations, comments, Markdown or code fences.
+- The result must compile with Lean 4 and Mathlib.
+- Use only variables, hypotheses and definitions available in the local context.
+- Do not modify anything outside the placeholder.
+- Never use sorry, admit, or other placeholders.
+- Do not invent assumptions, lemmas or declarations.
+- Prefer existing Mathlib lemmas over lengthy manual proofs.
+- Use exact Lean 4 syntax.
+- Carefully inspect the syntax immediately before and after the placeholder.
+- If the placeholder follows ":=", return a complete proof, usually beginning with "by".
+- If the placeholder is inside an existing "by" block, return only the necessary tactics.
+- If the proof requires multiple tactics, return all of them in the correct order.
+- Do not return the word "claude".
+
+The output will be inserted directly into the source file.
+`;
+
+try {
+  if (typeof path !== "string" || path.length === 0) {
+    throw new Error("Kein gültiger Dateipfad verfügbar.");
+  }
+
+  const dateipfad = path.startsWith("file://")
+    ? fileURLToPath(path)
+    : path;
+
+  const kontext = fs.readFileSync(dateipfad, "utf8");
+
+  const placeholder = "claude";
+  const position = kontext.lastIndexOf(placeholder);
+
+  if (position === -1) {
+    throw new Error('Der Platzhalter "claude" wurde nicht gefunden.');
+  }
+
+  const body = JSON.stringify({
+    model: MODELL,
+    stream: false,
+    options: {
+      temperature: 0,
+      top_p: 0.9,
+      num_ctx: 16384,
+      num_predict: 2048
+    },
+    messages: [
+      {
+        role: "system",
+        content: SYSTEM_PROMPT
+      },
+
+    {
+    role: "user",
+    content:
+        "Here is the complete Lean 4 source file:\n\n" +
+        "<LEAN_SOURCE>\n" +
+        kontext +
+        "\n</LEAN_SOURCE>\n\n" +
+        'The LAST occurrence of the exact text "claude" is the placeholder.\n' +
+        "Its position in the source file is character " +
+        position +
+        ".\n\n" +
+        "Analyze the surrounding code carefully. Determine the complete local proof " +
+        "context, including the theorem statement, hypotheses, variables, definitions " +
+        "and syntactic structure.\n\n" +
+        "Return ONLY the Lean code that replaces this final placeholder. " +
+        "Do not repeat any surrounding source code."
+    }
+
+    ]
+  });
+
+  const res = spawnSync("/usr/bin/curl", [
+    "-sS",
+    "--max-time", "300",
+    "-H", "Content-Type: application/json",
+    "--data-binary", "@-",
+    "http://localhost:11434/api/chat"
+  ], {
+    input: body,
+    encoding: "utf8",
+    maxBuffer: 10 * 1024 * 1024
+  });
+
+  if (res.error) {
+    rv = "-- Fehler: " + res.error.message;
+
+  } else if (res.status !== 0) {
+    rv = "-- Fehler (läuft Ollama?): " + res.stderr;
+
+  } else {
+    const data = JSON.parse(res.stdout);
+
+    if (data.error) {
+      rv = "-- Ollama-Fehler: " + data.error;
+
+    } else if (!data.message || typeof data.message.content !== "string") {
+      rv = "-- Fehler: Ollama hat keine gültige Antwort geliefert.";
+
+    } else {
+      rv = data.message.content
+        .replace(/^```(?:lean4?|text)?\s*/i, "")
+        .replace(/\s*```$/, "")
+        .trim();
+
+      if (!rv) {
+        rv = "-- Fehler: Das Modell hat keinen Beweis zurückgegeben.";
+      }
+
+      if (rv.includes("sorry") || rv.includes("admit")) {
+        rv = "-- Warnung: Das Modell hat einen unzulässigen Platzhalter ausgegeben:\n" + rv;
+      }
+    }
+  }
+
+} catch (e) {
+  rv = "-- Fehler: " + e.message;
+}
+``
+endsnippet
+
+
+
+
+snippet claudealtneu "Lokales Modell fragen" wA
+``
+const fs = require("fs");
+const { fileURLToPath } = require("url");
+const { spawnSync } = require("child_process");
+
+const MODELL = "qwen2.5-coder:7b";
+
+const SYSTEM_PROMPT = `
+You are an expert Lean 4 theorem prover specializing in Mathlib.
+
+Your task is to replace the LAST occurrence of the exact placeholder
+"claude" in the provided Lean source file with a valid Lean 4 proof.
+
+STRICT RULES:
+- Return ONLY the replacement Lean code.
+- Do not include explanations, comments, Markdown or code fences.
+- Use only variables, hypotheses and definitions available in the local context.
+- Do not modify anything outside the placeholder.
+- Never use sorry, admit, or other placeholders.
+- Do not invent assumptions, lemmas or declarations.
+- Prefer existing Mathlib lemmas over lengthy manual proofs.
+- Use exact Lean 4 syntax.
+- Carefully inspect the syntax immediately before and after the placeholder.
+- If the placeholder follows ":=", return a complete proof, usually beginning with "by".
+- If the placeholder is inside an existing "by" block, return only the necessary tactics.
+- If the proof requires multiple tactics, return all of them in the correct order.
+- Make sure parentheses, indentation and tactic structure are correct.
+- Do not return the word "claude".
+
+The output will be inserted directly into the source file.
+`;
+
+try {
+  const dateipfad = path.startsWith("file://") ? fileURLToPath(path) : path;
+  const kontext = fs.readFileSync(dateipfad, "utf8");
+
+  const body = JSON.stringify({
+    model: MODELL,
+    stream: false,
+    messages: [
+      { role: "system", content: SYSTEM_PROMPT },
+      {
+        role: "user",
+        content: `
+Here is the complete Lean 4 source file.
+
+<LEAN_SOURCE>
+${kontext}
+</LEAN_SOURCE>
+
+Find the LAST occurrence of the exact placeholder "claude".
+
+Determine the complete local proof context, including:
+- The theorem statement
+- All available hypotheses
+- Local variables
+- Relevant definitions
+- The surrounding Lean syntax
+
+Analyze the proof goal carefully and choose appropriate Mathlib lemmas.
+Do not invent declarations or assumptions.
+
+Return ONLY the Lean code that must replace this final occurrence.
+Do not repeat any surrounding source code.
+`
+      }
+    ]
+  });
+
+  const res = spawnSync("/usr/bin/curl", [
+    "-sS", "--max-time", "3000",
+    "http://localhost:11434/api/chat",
+    "-d", "@-"
+  ], { input: body, encoding: "utf8", maxBuffer: 10 * 1024 * 1024 });
+
+  if (res.error) {
+    rv = "-- Fehler: " + res.error.message;
+  } else if (res.status !== 0) {
+    rv = "-- Fehler (läuft Ollama?): " + res.stderr;
+  } else {
+    const data = JSON.parse(res.stdout);
+    if (data.error) {
+      rv = "-- Fehler: " + data.error;
+    } else {
+      rv = data.message.content.replace(/\x60{3}[a-z0-9]*\n?/gi, "").trim();
+    }
+  }
+} catch (e) {
+  rv = "-- Fehler: " + e.message;
+}
+``
+endsnippet
+
+
+
+
+
+snippet claude "Lokales Modell fragen" wA
+``
+const fs = require("fs");
+const { fileURLToPath } = require("url");
+const { spawnSync } = require("child_process");
+
+const MODELL = "qwen2.5-coder:7b";
+
+try {
+  const dateipfad = path.startsWith("file://") ? fileURLToPath(path) : path;
+  const kontext = fs.readFileSync(dateipfad, "utf8");
+
+  const body = JSON.stringify({
+    model: MODELL,
+    stream: false,
+    messages: [
+      { role: "system", content: "Du hilfst bei Lean-4-Beweisen mit Mathlib. Antworte ausschließlich mit Lean-Code, ohne Erklärung und ohne Markdown. Vervollständige nur den fehlenden Code" },
+      { role: "user", content: "Hier ist die Datei:\n\n" + kontext + "\n\nErsetze das letzte claude durch einen vollständigen Beweis in Lean4. Gib nur den einzusetzenden gültigen fertigen Beweis zurück, der dort anstelle von 'claude' stehen sollte." }
+    ]
+  });
+
+  const res = spawnSync("/usr/bin/curl", [
+    "-sS", "--max-time", "300",
+    "http://localhost:11434/api/chat",
+    "-d", "@-"
+  ], { input: body, encoding: "utf8", maxBuffer: 10 * 1024 * 1024 });
+
+  if (res.error) {
+    rv = "-- Fehler: " + res.error.message;
+  } else if (res.status !== 0) {
+    rv = "-- Fehler (läuft Ollama?): " + res.stderr;
+  } else {
+    const data = JSON.parse(res.stdout);
+    if (data.error) {
+      rv = "-- Fehler: " + data.error;
+    } else {
+      rv = data.message.content.replace(/\x60{3}[a-z0-9]*\n?/gi, "").trim();
+    }
+  }
+} catch (e) {
+  rv = "-- Fehler: " + e.message;
+}
+``
+endsnippet

@@ -1,0 +1,2579 @@
+
+global
+// Change the sum snippet as its own
+// Go through all snippets that can be shortend
+// JavaScript code
+
+function gen_matrix(nrow, ncol) {
+	let results = "\n";
+	let order = 1;
+	for (var i=0; i < nrow; i++){
+		results += ' ';
+		for(var j = 0; j < ncol - 1; j++){
+			results += "$" + (order).toString() + " & ";
+			order ++;
+		}
+		results += "$" + (order).toString() + " \\\\" + "\\" + "\n" ;
+		order ++;
+	}
+	return results;
+}
+
+function gen_matrix_transposed(nrow, ncol) {
+	let results = "\n";
+	for (var i = 0; i < nrow; i++){
+		results += ' ';
+        var j = 0;
+		for(; j < ncol - 1;j++){
+			results += "$" + (i + j * ncol + 1).toString() + " & ";
+		}
+		results += "$" + (i + j * ncol + 1).toString() + " \\\\" + "\\" + "\n";
+	}
+	return results;
+}
+
+function tes_matrix(nrow, ncol,t) {
+	let results = "\n";
+	let order = 1;
+	for (var i=0; i<nrow; i++){
+		results += '	';
+		for(var j = 0;j <ncol-1;j++){
+			if (order > 1 ){
+				results += "${" +(order ).toString() + ":" + t[order-2] + "}\t & ";
+			}
+			else{
+				results += "$" +(order ).toString()  + " & ";
+			}
+			order ++;
+		}
+		results += "$"+(order).toString() +" \\\\" + "\\ ";
+		order ++;
+	}
+	return results;
+}
+
+// 输出一个表格
+function createTable(nrows, ncols) {
+	nrows = parseInt(nrows);
+	ncols = parseInt(ncols);
+
+	if (nrows === 0 | ncols === 0) {
+		return "";
+	}
+
+	ret = "\\begin{tabular}";
+	
+	if (ncols > 1) {
+		ret += "{ |c|" +  "c|".repeat(ncols-2) + "c| }";
+	} else {
+		ret += "{ |c| }";
+	}
+
+	ret += "\n";
+	
+	let order = 1;
+	
+	for (let i=0; i < nrows; i++) {
+		ret += "\\hline\n";
+		for (let j=0; j<ncols; j++){
+			if (j!=ncols-1) {
+				ret += "$" + ( order ).toString() + " " + "&";
+			} else {
+				ret += "$" + ( order ).toString() + " " + "\\\\" + "\\";
+				ret += "\n";
+			}
+			order++;
+		}
+	}
+	ret += "\\hline\n";
+	
+	ret += "\\end{tabular}\n";
+	
+	return ret;
+}
+
+function createTableNoLine(nrows, ncols) {
+	nrows = parseInt(nrows);
+	ncols = parseInt(ncols);
+
+	if (nrows === 0 | ncols === 0) {
+		return "";
+	}
+
+	ret = "\\begin{tabular}";
+	
+	if (ncols > 1) {
+		ret += "{ |c|" +  "c|".repeat(ncols-2) + "c| }";
+	} else {
+		ret += "{ |c| }";
+	}
+
+	ret += "\n\\hline\n";
+	
+	let order = 1;
+	
+	for (let i=0; i < nrows; i++) {
+		for (let j=0; j<ncols; j++){
+			if (j!=ncols-1) {
+				ret += "$" + ( order ).toString() + " " + "&";
+			} else {
+				ret += "$" + ( order ).toString() + " " + "\\\\" + "\\";
+				ret += "\n";
+			}
+			order++;
+		}
+	}
+	ret += "\\hline\n";
+	
+	ret += "\\end{tabular}\n";
+	
+	return ret;
+}
+
+
+// Not yet implemented
+function math(context) {
+    return context.scopes.some(s => s.startsWith("meta.math"));
+}
+
+endglobal
+
+
+
+
+
+
+
+
+snippet template "Basic template" b
+
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+%\usepackage[ngerman]{babel}
+%\usepackage[T1]{fontenc}
+
+% Kopfzeilen
+\usepackage{scrlayer-scrpage}
+% Bilder
+\usepackage{graphicx}
+\usepackage{wrapfig}
+% chemische Formeln
+\usepackage[version=4]{mhchem}
+\usepackage{textcomp, gensymb}
+
+% colored text
+\usepackage{xcolor}
+
+
+\usepackage{mathtools}
+% für Links
+\usepackage{hyperref}
+
+
+% example: table sizes
+\usepackage{adjustbox}
+\usepackage{array}
+\usepackage{varwidth}
+
+
+\usepackage{blindtext}
+\usepackage{enumerate}
+
+\usepackage[a4paper, left=2cm, right=2cm, top=3cm]{geometry}
+
+\setlength{\headheight}{13pt}
+
+
+
+\begin{document}
+\ihead{Arthur Henninger}
+%\ihead{\_qRtrenH\&}
+\chead{}
+\ohead{}
+
+\cfoot{\pagemark}
+
+
+\begin{huge}
+\begin{center}
+	$0
+\end{center}
+\end{huge}
+
+
+
+\end{document}
+
+endsnippet
+
+snippet math_template "Math template" b
+\documentclass{report}
+
+\input{~/dotfiles/tex/templates/preamble_modified.tex}
+\input{~/dotfiles/tex/templates/macros.tex}
+\input{~/dotfiles/tex/templates/letterfonts.tex}
+
+\title{\Huge{Some Class}\\Random Examples}
+\author{\huge{Your Name}}
+\date{}
+
+\usepackage{silence}
+\WarningFilter{latexfont}{}
+
+\begin{document}
+
+\maketitle
+\newpage% or \cleardoublepage
+% \pdfbookmark[<level>]{<title>}{<dest>}
+\pdfbookmark[section]{\contentsname}{toc}
+\tableofcontents
+\pagebreak
+
+\chapter{}
+\section{Random Examples}
+\dfn{}{
+
+}
+
+\end{document}
+
+endsnippet
+
+snippet uebung_template "Übung template" b
+\documentclass{report}
+
+\input{~/dotfiles/tex/templates/input.tex}
+
+\begin{document}
+
+\lhead{Arthur Henninger}
+\chead{ - Übung 1}
+\rhead{ Tutorium }
+
+
+\section*{Aufgabe 1}
+
+\end{document}
+
+endsnippet
+
+
+snippet math_commands "Math commands" b
+
+\newcommand{\rvec}[1]{
+    \begin{pmatrix}
+        #1
+    \end{pmatrix}
+}
+\newcommand{\brackets}[1]{
+	\left(#1 \right)
+}
+\newcommand{\curly}[1]{
+	\left\{#1 \right\}
+}
+\newcommand{\angular}[1]{
+	\left\[#1 \right\]
+}
+
+endsnippet
+
+
+
+snippet template1 "Basic template" b
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage[dutch]{babel}
+\usepackage{amsmath, amssymb}
+
+
+% figure support
+\usepackage{import}
+\usepackage{xifthen}
+\pdfminorversion=7
+\usepackage{pdfpages}
+\usepackage{transparent}
+\newcommand{\incfig}[1]{%
+	\def\svgwidth{\columnwidth}
+	\import{./figures/}{#1.pdf_tex}
+}
+
+\pdfsuppresswarningpagegroup=1
+
+\begin{document}
+	$0
+\end{document}
+endsnippet
+
+snippet beg "begin{} / end{}" w
+\\begin{$1}
+	$0
+\\end{$1}
+endsnippet
+
+snippet ... "ldots" iA
+\ldots 
+endsnippet
+
+snippet ddots "ddots" iA
+\ddots
+endsnippet
+
+
+
+
+
+
+
+
+
+snippet table "Table environment" bAw
+\begin{table}[${1:htpb}]
+	\centering
+	\caption{${2:caption}}
+	\label{tab:${3:label}}%
+	\begin{tabular}{${5:c}}
+	$0${5/((?<=.)c|l|r)|./(?1: & )/g}
+	\end{tabular}
+\end{table}
+endsnippet
+
+snippet wtable "Wahrheitstabelle A B Y" iA
+\begin{tabular}{c|c|c}
+    0 & 0 & $1 \\\ 0 & 1 & $2 \\\ 1 & 0 & $3 \\\ 1 & 1 & $4
+\end{tabular}$0
+endsnippet
+
+snippet fig "Figure environment" b
+\begin{figure}[${1:Hhtpb}] % Choose H
+	%\captionsetup{justification=raggedright, singlelinecheck=false}
+	\centering
+	${2:\includegraphics[width=0.8\textwidth]{Bilder/$3}}
+	%\caption{${4:$3}}
+	\label{fig:${5:${3/\W+/-/g}}}
+\end{figure}
+endsnippet
+
+snippet enumn "Enumerate" bA
+\begin{enumerate}
+	\item ${1:${VISUAL}}
+\end{enumerate}$0
+endsnippet
+
+snippet enum1 "Enumerate" bA
+\begin{enumerate}[label = \arabic*)]
+	\item ${1:${VISUAL}}
+\end{enumerate}$0
+endsnippet
+
+snippet enum(1) "Enumerate" bA
+\begin{enumerate}[label = (\arabic*)]
+	\item ${1:${VISUAL}}
+\end{enumerate}$0
+endsnippet
+
+snippet enum. "Enumerate" bA
+\begin{enumerate}[label = \arabic*.]
+	\item ${1:${VISUAL}}
+\end{enumerate}$0
+endsnippet
+
+snippet enuma "Enumerate" bA
+\begin{enumerate}[label = \alph*)]
+	\item ${1:${VISUAL}}
+\end{enumerate}$0
+endsnippet
+
+snippet enumi "Enumerate" bA
+\begin{enumerate}[label = (\roman*)]
+	\item ${1:${VISUAL}}
+\end{enumerate}$0
+endsnippet
+
+snippet enumi "Enumerate" bA
+\begin{enumerate}[label = \Roman*.]
+	\item ${1:${VISUAL}}
+\end{enumerate}$0
+endsnippet
+
+snippet enumx "Enumerate Label Eingabe" bA
+\begin{enumerate}[label = ${1:\$\to\$}]
+	\item ${2:${VISUAL}}
+\end{enumerate}
+endsnippet
+
+snippet itm "Itemize" i
+\begin{itemize}
+	\item ${1:${VISUAL}}
+\end{itemize}$0
+endsnippet
+
+snippet ii "NewItem" A
+\item 
+endsnippet
+
+#snippet desc "Description" b
+#\begin{description}
+#	\item[$1] $0
+#\end{description}
+#endsnippet
+
+#snippet pac "Package" b
+#\usepackage[${1:options}]{${2:package}}$0
+#endsnippet
+
+snippet => "implies" Ai
+\implies
+endsnippet
+
+snippet =< "implied by" Ai
+\impliedby
+endsnippet
+
+snippet iff "iff" wA
+\iff
+endsnippet
+
+snippet qq "Abstand quad qq" iA
+\quad
+endsnippet
+
+snippet \quadq "Abstand qquad qqq" iA
+\qquad
+endsnippet
+
+
+snippet mk "Math" iA
+$${1:${VISUAL}}$$0
+endsnippet
+
+snippet kdm "Math without ." wA
+\begin{align*}
+    ${1:${VISUAL}}
+\end{align*} $0
+endsnippet
+
+snippet dm "Math" wA
+\begin{align*}
+    ${1:${VISUAL}}
+.\end{align*} $0
+endsnippet
+
+snippet kali "Align" bA
+\begin{align}
+	${1:${VISUAL}} \label{eq:$2}$3
+\end{align}
+endsnippet
+
+snippet ali "Align" bAw
+\begin{align}
+	${1:${VISUAL}} \label{eq:$2}$3
+.\end{align}
+endsnippet
+
+
+snippet frac "Fraction" iA
+\\frac{$1}{$2}$0
+endsnippet
+
+#snippet / "Fraction" i
+#\\frac{${VISUAL}}{$1}$0
+#endsnippet
+
+#snippet '((\d+)|(\d*)(\\)?([A-Za-z]+)((\^|_)(\{\d+\}|\d))*)/' "symbol frac" wrA
+#\\frac{`!p snip.rv = match.group(1)`}{$1}$0
+#endsnippet
+
+#snippet '^.*\)/' "() frac" wrA
+#`!p
+#stripped = match.string[:-1]
+#depth = 0
+#i = len(stripped) - 1
+#while True:
+#	if stripped[i] == ')': depth += 1
+#	if stripped[i] == '(': depth -= 1
+#	if depth == 0: break;
+#	i-=1
+#snip.rv = stripped[0:i] + "\\frac{" + stripped[i+1:-1] + "}"
+#`{$1}$0
+#endsnippet
+
+#snippet '([A-Za-z])(\d)' "auto subscript" wrA
+#`!p snip.rv = match.group(1)`_`!p snip.rv = match.group(2)`
+#endsnippet
+
+#snippet '([A-Za-z])_(\d\d)' "auto subscript2" wrA
+#`!p snip.rv = match.group(1)`_{`!p snip.rv = match.group(2)`}
+#endsnippet
+
+
+#snippet sympy "sympyblock " w
+#sympy $1 sympy$0
+#endsnippet
+
+#snippet 'sympy(.*)sympy' "sympy" wr
+#`!p
+#from sympy import *
+#x, y, z, t = symbols('x y z t')
+#k, m, n = symbols('k m n', integer=True)
+#f, g, h = symbols('f g h', cls=Function)
+#init_printing()
+#snip.rv = eval('latex(' + match.group(1).replace('\\', '').replace('^', '**').replace('{', '(').replace('}', ')') + ')')
+#`
+#endsnippet
+
+#snippet math "mathematicablock" w
+#math $1 math$0
+#endsnippet
+
+#snippet 'math(.*)math' "math" wr
+#`!p
+#import subprocess
+#code = match.group(1)
+#code = 'ToString[' + code + ', TeXForm]'
+#snip.rv = subprocess.check_output(['wolframscript', '-code', code])
+#`
+#endsnippet
+
+snippet == "equals" iA
+&= $1 \\\\
+endsnippet
+
+snippet ~= "ungefähr gleich" iA
+\approx
+endsnippet
+
+snippet != "equal not" iA
+\neq 
+endsnippet
+
+snippet +- "Plus Minus" iAm
+\pm
+endsnippet
+
+snippet -+ "Minus Plus" iAm
+\mp
+endsnippet
+
+snippet pmat "pmat" iA
+\begin{pmatrix} $1 \end{pmatrix} $0
+endsnippet
+
+snippet +- "Plus Minus" iA
+\pm
+endsnippet
+
+snippet .= "Gleich mit Punkt drüber" iA
+\dot{=}
+endsnippet
+
+snippet |= "Gleich mit Strich links" iA
+\vDash
+endsnippet
+
+snippet |- "Strich mit Strich links" iA
+\vdash
+endsnippet
+
+snippet ..() "Klammer mit Punkt drüber" iA
+\dot{(}
+endsnippet
+
+snippet ..) "Klammer zu mit Punkt drüber" iA
+\dot{)}
+endsnippet
+
+snippet lnot "Logisches nicht" iA
+\lnot
+endsnippet
+
+snippet lor "Logisches Oder" iAm
+\lor
+endsnippet
+
+snippet land "Logisches Und" iAm
+\land
+endsnippet
+
+snippet topp "Top immer wahr Zeichen" iAm
+\top
+endsnippet
+
+snippet bot "Bot immer falsch Zeichen" iAm
+\bot
+endsnippet
+
+snippet künstlichhöher "Macht ein unsichtbares höheres Recheck" iA
+\rule{0pt}{${1:15}pt}
+endsnippet
+
+snippet lbr "llbracket Linke doppelte eckige Klammer" iA
+\left\llbracket $1 \right\rrbracket
+endsnippet
+
+snippet llbr "llbracket Linke doppelte eckige Klammer" iA
+\llbracket
+endsnippet
+
+snippet rrbr "rrbracket Rechte doppelte eckige Klammer" iA
+\rrbracket
+endsnippet
+
+snippet nonumber "Notag/Nonumber in align"
+\nonumber
+endsnippet
+
+snippet bmat "bmat" iA
+\begin{bmatrix} $1 \end{bmatrix} $0
+endsnippet
+
+snippet matrix "bmat" iAm
+\begin{matrix} $1 \end{matrix} $0
+endsnippet
+
+snippet () "left( right)" iA
+\left( ${1:${VISUAL}} \right)$0
+endsnippet
+
+snippet [] "left[ right]" iA
+\left[ ${1:${VISUAL}} \right] $0
+endsnippet
+
+snippet {} "left{ right}" iA
+\left\{ ${1:${VISUAL}} \right\\} $0
+endsnippet
+
+snippet lr "left( right)" i
+\left( ${1:${VISUAL}} \right) $0
+endsnippet
+
+snippet lr( "left( right)" i
+\left( ${1:${VISUAL}} \right) $0
+endsnippet
+
+snippet lr| "left| right|" i
+\left| ${1:${VISUAL}} \right| $0
+endsnippet
+
+snippet lr{ "left\{ right\}" i
+\left\\{ ${1:${VISUAL}} \right\\} $0
+endsnippet
+
+snippet lrb "left\{ right\}" i
+\left\\{ ${1:${VISUAL}} \right\\} $0
+endsnippet
+
+snippet lr[ "left[ right]" i
+\left[ ${1:${VISUAL}} \right] $0
+endsnippet
+
+snippet lra "leftangle rightangle" iA
+\left<${1:${VISUAL}} \right>$0
+endsnippet
+
+snippet midd "middle" iA
+\middle
+endsnippet
+
+snippet overl "conjugate" iAm
+\overline{${1:${VISUAL}}}
+endsnippet
+
+snippet sum "sum" mwA
+\sum_{${1:i=1}}^{${2:n}} ${3:a_n z^n}
+endsnippet
+
+snippet lsum "sum" wAm
+\sum ${0:${VISUAL}}
+endsnippet
+
+snippet usum "sum" wAm
+\sum_{$1}
+endsnippet
+
+snippet taylor "taylor" w
+\sum_{${1:k}=${2:0}}^{${3:\infty}} ${4:c_$1} (x-a)^$1
+endsnippet
+
+snippet limes "limit" wAm
+\lim_{${1:n} \to ${2:\infty}} 
+endsnippet
+
+snippet limsup "limsup" wAm
+\limsup_{${1:n} \to ${2:\infty}} 
+endsnippet
+
+snippet supp "Supremum" iAm
+\sup_{$1}
+endsnippet
+
+snippet liminf "liminf" wAm
+\liminf_{${1:n} \to ${2:\infty}} 
+endsnippet
+
+snippet inff "infimum" iAm
+\inf
+endsnippet
+
+snippet prod "product" wAm
+\prod_{${1:n=${2:1}}}^{${3:\infty}} ${0:${VISUAL}}
+endsnippet
+
+snippet uprod "product mit nur unten" wAm
+\prod_{${1:\N}} ${0:${VISUAL}}
+endsnippet
+
+snippet part "d/dx" w
+\frac{\partial ${1:V}}{\partial ${2:x}}
+endsnippet
+
+snippet partial "partial" wAm
+\partial
+endsnippet
+
+snippet lapl "Laplace" Aim 
+\Delta
+endsnippet
+
+snippet dreieck "Laplace" Aim 
+\triangle
+endsnippet
+
+snippet todo "TODO" Ai
+% // TODO: 
+endsnippet
+
+snippet sq "\sqrt{}" iAm
+\sqrt{${1:${VISUAL}}}
+endsnippet
+
+#snippet sr "^2" iA
+#^2
+#endsnippet
+
+snippet cb "^3" iA
+^3
+endsnippet
+
+snippet td "to the ... power" im
+^{$1}
+endsnippet
+
+snippet pw "to the ... power" iA
+^{$1}
+endsnippet
+
+snippet pk "Index (k) oben" iA
+^{(${1:k})}
+endsnippet
+
+snippet __ "subscript" iA
+_{$1}
+endsnippet
+
+snippet unterst "Unterstrich" iA
+\_
+endsnippet
+
+snippet iii "Index für Text im Mathemodus" iA
+_\text{$1}
+endsnippet
+
+snippet einschr "Einschränkung Strich nach unten eingeschränkt" iA
+\vert_{$1}
+endsnippet
+
+snippet ooo "\infty" iA
+\infty
+endsnippet
+
+snippet \mathcal{L}L "Laufzeit O()" iA
+\mathcal{O}\left(${1:${VISUAL}}\right)
+endsnippet
+
+snippet LLL "Laufzeit O()" iA
+\mathcal{O}\left(${1:${VISUAL}}\right)
+endsnippet
+
+snippet rij "mrij" i
+(${1:x}_${2:n})_{${3:$2}\\in${4:\\N}}
+endsnippet
+
+snippet <= "leq" iA
+\le 
+endsnippet
+
+snippet >= "geq" iA
+\ge 
+endsnippet
+
+snippet 3= "Gleich mit drei Strichen" wA
+\equiv
+endsnippet
+
+snippet := "ist definiert durch" iAM 
+\coloneq
+endsnippet
+
+snippet =: "ist definiert durch" iAM 
+\eqcolon
+endsnippet
+
+snippet isoo "Kongruent" iAM
+\cong
+endsnippet
+
+snippet cong "Kongruent" iAM
+\cong
+endsnippet
+
+snippet EE "geq" iA
+\exists
+endsnippet
+
+snippet AA "forall" iA
+\forall
+endsnippet
+
+snippet xnn "xn" iA
+x_{n}
+endsnippet
+
+snippet ynn "yn" iA
+y_{n}
+endsnippet
+
+snippet exp "Exponentialfuntion" iAm
+\exp($1)
+endsnippet
+
+snippet ww "w tilde" iAm
+\tilde{w}
+endsnippet
+
+
+snippet xii "xi" iA
+x_{i}
+endsnippet
+
+snippet yii "yi" iA
+y_{i}
+endsnippet
+
+snippet xjj "xj" iA
+x_{j}
+endsnippet
+
+snippet yjj "yj" iA
+y_{j}
+endsnippet
+
+snippet xp1 "x" iA
+x_{n+1}
+endsnippet
+
+snippet xmm "x" iA
+x_{m}
+endsnippet
+
+snippet R0+ "R0+" iA
+\\R_0^+
+endsnippet
+
+snippet plot "Plot" w
+\begin{figure}[$1]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+			xmin= ${2:-10}, xmax= ${3:10},
+			ymin= ${4:-10}, ymax = ${5:10},
+			axis lines = middle,
+		]
+			\addplot[domain=$2:$3, samples=${6:100}]{$7};
+		\end{axis}
+	\end{tikzpicture}
+	\caption{$8}
+	\label{${9:$8}}
+\end{figure}
+endsnippet
+
+snippet tikfunc "Function in tikz" wA 
+\draw[domain=${1:0:4}, smooth, variable=\x, blue] plot ({\x}, ${2:(-\x)*(\x-4)});
+endsnippet
+
+snippet algo "Algorithmus Umgebung einfügen" Abw
+\begin{algorithm}[H]
+	%\dontprintsemicolon
+	\caption{$3}
+	\KwIn{$4}
+	\KwOut{$5}
+	\preplabel{algocf}%
+	\label{algocf:${2:zahl}}%
+	$0
+\end{algorithm}
+endsnippet
+
+snippet rcode "Set lstlistings design for R-code" Abw
+\lstset{
+    language=R,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{myclaimfr},
+    stringstyle=\color{red},
+    frame=single,
+    breaklines=true
+}
+endsnippet
+
+snippet code "Start code or pseudo code environment with lstlisting" Abw
+\begin{lstlisting}
+${1:# R-Code mit Syntax-Highlighting
+x <- 1:10
+y <- x^2
+plot(x, y, main='Beispielplot')}
+\end{lstlisting}
+endsnippet
+
+snippet ohnecounter "Algorithmus ohne Counter" Ab
+\setcounter{algocf}{\value{algocf}-1}
+\begin{algorithm}[H]
+\renewcommand{\thealgocf}{} % Entfernt die Nummerierung für diesen Algorithmus
+\caption*{${1:Titel}} % Keine Nummer in der Beschriftung
+	\KwIn{$2}
+	\KwOut{$3}
+	$0
+\end{algorithm}
+% Zähler zurücksetzen, damit der nächste Algorithmus korrekt nummeriert wird
+\stepcounter{algocf}
+endsnippet
+
+snippet proced "Procedure also Funktion im Algorithmus" A
+\begin{procedure}
+	\caption{${1:Titel}}
+	$0
+\end{procedure}
+endsnippet
+
+snippet Forr "For Schleife" A
+\For{$1}{
+	$2
+}$0
+endsnippet
+
+snippet 3zell "makebox für assembercode" iA 
+\makebox[1.5cm][l]{$1} \makebox[1cm][l]{$2}$0
+endsnippet
+
+snippet makebox "makebox für Tabs mit gleicher Einrückung" iA
+\makebox[${2:2}cm][l]{${1:${VISUAL}}}$0
+endsnippet
+
+snippet Func "Funktion im Algorithmus" A
+\SetKwFunction{${1:Befehl}}{${2:name im code}}$0
+endsnippet
+
+snippet While "While Schleife" A
+\While{$1}{
+	$2
+}$0
+endsnippet
+
+snippet Repeat "repeat until" A 
+\Repeat{${1:until}}{
+	$2
+}$0
+endsnippet
+
+snippet IF "If Bedinung" A
+\If{$1}{
+	$2
+}$0
+endsnippet
+
+snippet uIf "If Bedinung, wenn noch else if folgt (Strich nach untern geht nicht nach rechts)" A
+\uIf{$1}{
+	$2
+}$0
+endsnippet
+
+snippet eIf "If Bedinung mit Else" Ai
+\eIf{$1}{
+	$2
+}{
+	$3
+}$0
+endsnippet
+snippet ueIf "If Bedinung mit Else" A
+\eIf{$1}{
+	$2
+}{
+	$3
+}$0
+endsnippet
+
+snippet Elif "else if bei einer If-Bedinung" A
+\ElseIf{$1}{
+	$2
+}$0
+endsnippet
+
+snippet uElif "else if bei einer If-Bedinung, wenn noch else if folgt (Strich nach untern geht nicht nach rechts)" A
+\uElseIf{$1}{
+	$2
+}$0
+endsnippet
+
+snippet Return "Return im Algorithmus" A 
+\Return{$1}\;
+endsnippet
+
+snippet kwto "To im Algorithmus" iA
+\KwTo
+endsnippet
+
+
+snippet nn "Tikz node" w
+\node[$5] (${1/[^0-9a-zA-Z]//g}${2}) ${3:at (${4:0,0}) }{$${1}$};
+$0
+endsnippet
+
+snippet mc "mathcal" iA
+\mathcal{$1}$0
+endsnippet
+
+snippet \mathcal{al "mathcal" iA
+\mathcal{
+endsnippet
+
+snippet mbb "mathbb" iA
+\mathbb{$1}$0
+endsnippet
+
+snippet lll "l" iA
+\ell
+endsnippet
+
+snippet nabla "nabla" iA
+\nabla 
+endsnippet
+
+snippet vardelt "Partial Ableitung Delta" iA 
+\partial
+endsnippet
+
+snippet maxx "Maximum" Ai
+\max_{$1}$0
+endsnippet
+
+snippet oxx "Tensorprodukt" iA
+\otimes 
+endsnippet
+
+snippet circ "Kringel, circ, Verknüfung von Funktionen" iA
+\circ
+endsnippet
+
+snippet xx "cross" iA
+\times
+endsnippet
+
+snippet nxn "n kreuz n" iA
+^{n \times n}
+endsnippet
+
+snippet kxk "k kreuz k" iA
+^{${1:k} \times $1}$0
+endsnippet
+
+snippet axb "a kreuz b" iA
+^{${1:m} \times ${2:n}}$0
+endsnippet
+
+snippet ** "cdot" iA
+\cdot 
+endsnippet
+
+snippet star "Stern" iAm
+\star
+endsnippet
+
+snippet kreisstern "Stern mit Kreis drum" iA
+{\tikz[baseline=-0.6ex] \node[draw, circle, inner sep=0.2ex]{$\ast$};}
+endsnippet
+
+snippet ### "Hashtag" iA 
+\texttt{\#}
+endsnippet
+
+snippet '(?<!\\)(sin|cos|arccot|cot|csc|ln|log|exp|star|perp)' "ln" rwA
+\\`!p snip.rv = match.group(1)`
+endsnippet
+
+snippet dint "integral" wA
+\int_{${1:-\infty}}^{${2:\infty}} $3 \\, dx $0
+endsnippet
+
+snippet uint "integral" wA
+\int_{${1:D}} $2 \\, dx $0
+endsnippet
+
+snippet lint "integral" wA
+\int $1 \\, dx $0
+endsnippet
+
+snippet mint "integral" wA
+\int_{${1:-\infty}} $2 \\, d \mu$0
+endsnippet
+
+snippet fint "F integral" wA
+\fint_{B_{${1:r}}(x)} $2 \\, d m^d $0
+endsnippet
+
+snippet '(?<!\\)(arcsin|arccos|arctan|arccot|arccsc|arcsec|pi|zeta|int)' "ln" rwA
+\\`!p snip.rv = match.group(1)`
+endsnippet
+
+snippet \leftarrow> "leftrightarrow" iA
+\leftrightarrow
+endsnippet
+
+snippet --> "longto" miA
+\longrightarrow
+endsnippet
+
+snippet -> "to" mAi
+\to 
+endsnippet
+
+snippet <- "leftarrow" iA
+\leftarrow
+endsnippet
+
+snippet lmaps "Long mapsto" iA
+\longmapsto
+endsnippet
+
+snippet maps "mapsto" iA
+\mapsto
+endsnippet
+
+snippet gets "Variable zuweisen im Algorithmus" iA 
+\gets
+endsnippet
+
+snippet uparr "Pfeil nach oben" iA
+\uparrow
+endsnippet
+
+snippet nearr "Pfeil nach oben rechts" iA
+\nearrow
+endsnippet
+
+snippet !> "mapsto" iA
+\mapsto 
+endsnippet
+
+snippet s> "leads to geschwungener Pfeil" iA 
+\leadsto
+endsnippet
+
+snippet invs "inverse" iA
+^{-1}
+endsnippet
+
+snippet compl "complement" iAm
+^{c}
+endsnippet
+
+snippet minuss "backslash" iAm
+\setminus
+endsnippet
+
+snippet kbacksl "backslash" iAm
+\setminus
+endsnippet
+
+snippet backsl "backslash" iA
+\backslash 
+endsnippet
+
+snippet blitz "Widerspruch" iA
+\lightning
+endsnippet
+
+snippet ari "Arität" iAm
+\ar
+endsnippet
+
+snippet frei "Freie Variablen" iAm
+\frei
+endsnippet
+
+snippet var "Variablen" iAm
+\var
+endsnippet
+
+snippet gebunden "Gebundene Variablen" iAm
+\gebunden
+endsnippet
+
+snippet Mod "Modellklasse" iAm
+\Mod
+endsnippet
+
+snippet ZF "Zermelo Fraenkel" iAm
+\ZF
+endsnippet
+
+snippet Rel "binäre Relation" iAm
+\Rel
+endsnippet
+
+snippet Dom "Domain" iAm
+\Dom
+endsnippet
+
+snippet Bild "Bild im Mathemodus" iAm
+\Bild
+endsnippet
+
+snippet Fun "Fun" iAm
+\Fun
+endsnippet
+
+snippet Trans "Trans" iAm
+\Trans
+endsnippet
+
+snippet Ord "Ordinalzahlen" iAm
+\Ord
+endsnippet
+
+snippet Succ "Succession" iAm
+\Succ
+endsnippet
+
+snippet Lim "Limes" iAm
+\Lim
+endsnippet
+
+snippet Kard "Kardinalzahlen" iAm
+\Kard
+endsnippet
+
+snippet Abl "Menge der Ableitungen in K." iAm
+\Abl_{\mathcal{K}}
+endsnippet
+
+snippet >> ">>" iA
+\gg 
+endsnippet
+
+snippet << "<<" iA
+\ll 
+endsnippet
+
+
+snippet ~~ "~" iA
+\sim 
+endsnippet
+
+snippet simeq "simeq" iAm
+\simeq
+endsnippet
+
+snippet abs "abs" iAm
+\abs{${1:${VISUAL}}}
+endsnippet
+
+snippet norm "norm" wAm
+\norm{${1:${VISUAL}}}
+endsnippet
+
+snippet scal "scalar" wAm
+\scal{${1:${VISUAL}}}
+endsnippet
+
+snippet ceil "ceil" wA
+\ceil{$1}
+endsnippet
+
+snippet floor "floor" wA
+\floor{$1}
+endsnippet
+
+snippet round "round" wA
+\round{$1}
+endsnippet
+
+snippet || "mid" iA
+\mid
+endsnippet
+
+
+snippet subb "echte Teilmenge" Ai
+\subset 
+endsnippet
+
+snippet substack "Substack unternander schreiben" iA
+\substack{${1:${VISUAL}}}
+endsnippet
+
+snippet `\\(subset)\s(eq)` "Unechte Teilmenge" Ai 
+\subseteq
+endsnippet
+
+snippet `\\(subset)\s(neq)` "Die allerechte Teilmenge" Ai
+\subsetneq
+endsnippet
+
+snippet notin "not in " iA
+\not\in 
+endsnippet
+
+snippet nono "centernot" iA
+\centernot
+endsnippet
+
+snippet argminn iAm
+\argmin_{$1}
+endsnippet
+
+snippet minn iA
+\min_{$1}
+endsnippet
+
+snippet div iAm
+\div
+endsnippet
+
+snippet sin "Sinus" iAm
+\sin
+endsnippet
+
+snippet cos "Cosinus" iAm
+\cos
+endsnippet
+
+snippet log "Logarithmus" iAm
+\log
+endsnippet
+
+snippet inn "in " iAm
+\in
+endsnippet
+
+snippet NN "n" iA
+\N
+endsnippet
+
+snippet KK "n" iAm
+\K
+endsnippet
+
+snippet Nn "cap" iA
+\cap 
+endsnippet
+
+snippet UU "cup" iA
+\cup 
+endsnippet
+
+snippet uuu "bigcup" iA
+\bigcup_{${1:i \in ${2: I}}}
+endsnippet
+
+snippet nnn "bigcap" iA
+\bigcap_{${1:i \in ${2: I}}}
+endsnippet
+
+snippet OO "emptyset" iA
+\emptyset
+endsnippet
+
+snippet CC "complex" iA
+\C
+endsnippet
+
+snippet RR "real" iA
+\R
+endsnippet
+
+snippet RPn "Reeller Projektiver Raum" iAm
+\Rp[n]
+endsnippet
+
+snippet Rpn "Reeller Projektiver Raum" iAm
+\Rp[n]
+endsnippet
+
+snippet `Rp(\d+) ` "Reeller Projektiver Raum" iAm
+\Rp[``rv = m[1]``]
+endsnippet
+
+snippet `RP(\d+) ` "Reeller Projektiver Raum" iAm
+\Rp[``rv = m[1]``]
+endsnippet
+
+snippet QQ "Q" iA
+\Q
+endsnippet
+
+snippet ZZ "Z" iA
+\Z
+endsnippet
+
+snippet LL "L" iAm
+\mathcal{L}
+endsnippet
+
+snippet TT "L" iAm
+\mathcal{T}
+endsnippet
+
+snippet PP "Polynome" iA
+\mathbb{P}
+endsnippet
+
+snippet <! "normal" iA
+\triangleleft 
+endsnippet
+
+snippet <> "hokje" iA
+\diamond 
+endsnippet
+
+
+#snippet '(?<!i)sts' "text subscript" irA
+#_\text{$1} $0
+#endsnippet
+
+snippet ltxt "Linksbündiger text in Align" iAm
+\intertext{${1:${VISUAL}}}
+
+endsnippet
+
+snippet txt "text" iA
+\text{${1:${VISUAL}}}$0
+endsnippet
+
+snippet cases "cases" wA
+\begin{cases} $1 \end{cases}
+endsnippet
+
+snippet SI "SI" iA
+\SI{$1}{$2}
+endsnippet
+
+snippet bigfun "Big function" iA
+\begin{align*}
+	$1: $2 &\longrightarrow $3 \\\\
+	$4 &\longmapsto $1($4) = $0
+.\end{align*}
+endsnippet
+
+snippet cvec "column vector" iA
+\begin{pmatrix} ${1:x}_${2:1}\\\\ \vdots\\\\ $1_${2:n} \end{pmatrix}
+endsnippet
+
+snippet "bar" "bar" riA
+\overline{$1}$0
+endsnippet
+
+snippet "([a-zA-Z])bar" "bar" riA
+\overline{`!p snip.rv=match.group(1)`}
+endsnippet
+
+snippet "hat" "hat" riA
+\hat{${1:${VISUAL}}}$0
+endsnippet
+
+#snippet "([a-zA-Z])hat" "hat" riA
+#\hat{`!p snip.rv=match.group(1)`}
+#endsnippet
+
+snippet "dot" "dot" iA
+\dot{${1:${VISUAL}}}$0
+endsnippet
+
+#snippet "(?<!\\)([a-zA-Z])dot" "dot" riA
+#\dot{`!p snip.rv=match.group(1)`}
+#endsnippet
+
+snippet letw "let omega" iA
+Let $\Omega \subset \C$ be open.
+endsnippet
+
+
+snippet HH "H" iA
+\mathbb{H}
+endsnippet
+
+#snippet DD "D" iA
+#\mathbb{D}
+#endsnippet
+
+# vim:ft=snippets
+
+
+snippet task "Task" b
+\section*{Aufgabe $1}
+endsnippet
+
+
+# Johannes neue Snippets
+
+snippet / "backslash" Ai
+\\
+endsnippet
+
+snippet enter "Absatz" wA 
+\\\
+
+endsnippet
+
+snippet parr "Zeilenbruch" iA 
+\par
+
+endsnippet
+
+snippet linie "Horizonater Strich" wA
+\vspace{0.5em}\noindent\hrule\vspace{0.5em}
+
+endsnippet
+
+snippet \ "backslash" Ai
+/
+endsnippet
+
+snippet `par(\d+) ` "Absatz xpt" iA 
+\par\vspace{``rv = m[1]``pt}
+
+endsnippet
+
+snippet `(\d+)\s*par` "Absatz xpt" iA 
+\par\vspace{``rv = m[1]``pt}
+
+endsnippet
+
+snippet fortsetzung "Label für Fortsetung anpassen (vor preplabel)" iA
+\phantomsection
+endsnippet
+
+snippet tabb "tab Einrückung" A
+\hspace*{2em}
+endsnippet
+
+snippet quadrat "Quadrat, also leeres Wort" iAm
+\square
+endsnippet
+
+# Griechische Buchstaben
+snippet eps "Epsilon Varepsilon" iA
+\varepsilon
+endsnippet
+snippet alpha "Alpha" iA
+\alpha
+endsnippet
+snippet pii "Pi" iA
+\pi
+endsnippet
+snippet beta "Beta" iA
+\beta
+endsnippet
+snippet gamma "Gamma" iA
+\gamma
+endsnippet
+snippet Gamma "Großes Gamma" iA
+\Gamma
+endsnippet
+snippet psi "Psi" iAm
+\psi
+endsnippet
+snippet Psi "großes Psi" iA 
+\Psi
+endsnippet
+snippet delta "Delta" iA
+\delta
+endsnippet
+snippet Delta "Großes Delta" iA
+\Delta
+endsnippet
+snippet muu "Mu" iA
+\mu
+endsnippet
+snippet nuu "Nu" iA
+\nu
+endsnippet
+snippet etaa "Eta" iA
+\eta
+endsnippet
+snippet delt "Delta" iA
+\delta
+endsnippet
+snippet lamm "Lambda" iA
+\lambda
+endsnippet
+snippet phi "Phi" iAm
+\phi
+endsnippet
+snippet Phi "großes Phi" iA
+\Phi
+endsnippet
+snippet kappa "Kappa Kondition" iA
+\kappa
+endsnippet
+snippet sigma "Sigma" iA
+\sigma
+endsnippet
+snippet Sigma "Großes Sigma" iA
+\Sigma
+endsnippet
+snippet rhoo "Rho" Aim
+\rho
+endsnippet
+snippet theta "Theta" iA
+\theta
+endsnippet
+snippet Theta "Großes Theta" iA
+\Theta
+endsnippet
+snippet omega "Omega" iA
+\omega
+endsnippet
+snippet tauu "Tau" iA
+\tau
+endsnippet
+snippet iota "Iota" iA
+\iota
+endsnippet
+snippet chi "Chi" iAm
+\chi
+endsnippet
+snippet Omega "Großes Omega" iA
+\Omega
+endsnippet
+
+snippet conv "Konvexe Hülle" iAm
+\conv
+endsnippet
+
+snippet checkk "Checkmark Häkchen" iA
+\checkmark{}
+endsnippet
+
+snippet haken "Checkmark Häkchen" iA
+\checkmark
+endsnippet
+
+snippet leerz "Zeichen für Leerzeichen" iA
+\textvisiblespace
+endsnippet
+
+snippet newpage "Neue leere Seite" bA
+\newpage
+$0
+endsnippet
+
+snippet comeback "Eine Lücke lassen" Ai
+${2: ersetzen } $1$0
+endsnippet
+
+snippet vorlesung "Fügt zwei Querbalken und Vorlesung am tt.mm.yyyy ein" bA
+\lecturedivider{${1:``rv = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date())``}}
+$0
+endsnippet
+
+snippet hypersetup "Farbe für Hyperlinks ändern" iA
+\begingroup
+\hypersetup{linkcolor=${1:white}}$0
+\endgroup
+
+endsnippet
+
+snippet dategreeting "Gives you the current date!" iA
+Hello from your hsnip at ``rv = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date())``!
+endsnippet
+
+
+snippet nkapitel "Befehl, um ein neues Kapitel ohne neue Seite zu erstellen" bA
+\chapter{$1}
+
+$0
+endsnippet
+
+snippet kapitel "Befehl, um ein neues Kapitel zu erstellen (neue Seite)" bA
+\newpage
+\chapter{$1}
+
+$0
+endsnippet
+
+
+
+snippet section "Befehl, um ein neues Unterkapitel zu erstellen" A
+\section{$1}
+
+$0
+endsnippet
+
+snippet subsection "Befehl, um eine neue subsection zu erstellen" A
+\subsection{$1}
+$0
+endsnippet
+
+snippet subsubsection "Befehl, um eine neue subsubsection zu erstellen" A
+\subsubsection{$1}
+$0
+endsnippet
+
+snippet tmm "Text im Mathemodus" iA
+\text{ $1 }$0
+endsnippet
+
+snippet ul "Underline text in LaTeX" wA
+\underline{${1:${VISUAL}}}$0
+endsnippet
+
+snippet bf "Fetter Text" iA
+\textbf{${1:${VISUAL}}}$0
+endsnippet
+
+snippet tfarb "Textfarbe ändern" iA
+\textcolor{${2:cyan}}{${1:${VISUAL}}}
+endsnippet
+
+snippet htmlf "Textfarbe HTML" iA 
+\textcolor[HTML]{${2:C42021}}{${1:${VISUAL}}}$0
+endsnippet
+
+snippet highl "Text markieren mit Textmarker" iA
+\highlight{0.5}{${2:Cyan}}{${1:${VISUAL}}}
+endsnippet
+
+snippet hlc "Code markieren mit farbigem Schatten" iA
+\codehl{0.5}{${2:Cyan}}{${1:${VISUAL}}}
+endsnippet
+
+snippet canc "Cancel, durchstreichen mit Farbe" iA
+\ccancel{${2:Cyan}}{${1:${VISUAL}}}
+endsnippet
+
+snippet farbb "Farbauswahl mit Tab" iA
+${1|cyan,magenta,lime,teal,blue,pink,green,yellow,red,purple,olive,violet,orange,brown,lightgray,white,gray,darkgray,black|}
+endsnippet
+
+snippet elabs "Labels für Enumerate" iA
+${1|\arabic*,\roman*,\alph*,$\to$,\Alph*,\Roman*,\arabic|}
+endsnippet
+
+snippet bmath "Fetter Text im Mathemodus, aber mach einfach textbf" iA
+\mathbf{$1}$0
+endsnippet
+
+snippet ool "Overline text in LaTeX" wA
+\overline{${1:${VISUAL}}}$0
+endsnippet
+
+snippet fbox "fbox Kästen erstellen" iA
+\fbox{${1:${VISUAL}}}$0
+endsnippet
+
+snippet underbr "Underbrace text in LaTeX" iA
+\underbrace{${1:${VISUAL}}}_{$2}$0
+endsnippet
+
+snippet clap "Underbrace keine Lücke" iAm
+\mathclap{$1}
+endsnippet
+
+snippet overbr "Overbrace text in LaTeX" iA
+\overbrace{${1:${VISUAL}}}^{$2}$0
+endsnippet
+
+snippet underset "Underset text in LaTeX" iA
+\underset{$1}{${2:${VISUAL}}}$0
+endsnippet
+
+snippet overset "Overset text in LaTeX" iA
+\overset{$1}{${2:${VISUAL}}}$0
+endsnippet
+
+snippet set "set" wAmi
+\set{${1:${VISUAL}}}
+endsnippet
+
+snippet hatt "Macht ein Dach" iA 
+\hat{${1:${VISUAL}}}$0
+endsnippet
+
+snippet quote "Zitat, Anführungszeichen" iA
+\enquote{${1:${VISUAL}}}
+endsnippet
+
+snippet "" "Zitat, Anführungszeichen" iA
+\enquote{${1:${VISUAL}}}
+endsnippet
+
+snippet tildd "Macht eine Schlange/Tilde über Buchstaben" iA 
+\tilde{${1:${VISUAL}}}$0
+endsnippet
+
+snippet tilde "Tilden Symbol" iA
+\sim
+endsnippet
+
+snippet tti "Kursiver Text" iA
+\textit{${1:${VISUAL}}}$0
+endsnippet
+
+snippet boxachtung "Ausrufezeichen Box" wA
+\begin{center}
+	\par\noindent
+	\raisebox{0pt}[0.8\baselineskip][0.8\baselineskip]{\Huge\bfseries !}
+	\hspace{0.5em}%
+	\fbox{%
+		\begin{minipage}{0.9\linewidth}
+			${1:${VISUAL}}
+		\end{minipage}%
+	}%
+	\hspace{0.5em}%
+	\raisebox{0pt}[0.8\baselineskip][0.8\baselineskip]{\Huge\bfseries !} \\\[7pt]
+	\par
+\end{center}
+endsnippet
+
+snippet achtung "Ausrufezeichen Box" wA
+\achtung{0.9}{0.5em}{${1:${VISUAL}}}
+endsnippet
+
+snippet matrix "Insert a matrix environment" wA
+\begin{pmatrix}
+	$1 & $2 \\\\\\
+	$3 & $4
+\end{pmatrix}
+$0
+endsnippet
+
+snippet array "Macht so ein Array in Matheformeln" wA
+\begin{align*}
+	\begin{array}{${1:ccc}}
+		${2:x} & ${3:y} & ${4:z} //
+		$0
+	\end{array}	
+.\end{align*} 
+endsnippet
+
+snippet minipp "Minipage für 2 Spalten nebeneinander" A
+\begin{minipage}{0.45\textwidth}
+    ${1:${VISUAL}}
+\end{minipage} \hfill
+\begin{minipage}{0.45\textwidth}
+	$2
+\end{minipage} \\
+$0
+endsnippet
+
+snippet tabular "Macht Tabelle mit oder ohne Linien" Ai
+\begin{tabular}{${1:ll}}
+	${2:links} & ${3:rechts}
+\end{tabular}$0
+endsnippet
+
+snippet matheklein "Kleine Brüche im Mathmode" Ai
+\begingroup\everymath{\textstyle}
+$1
+\endgroup
+endsnippet
+
+snippet emoji "Ermöglicht das Schreiben von Emojis direkt in den Code" Ai 
+{\emojifont ${1:😊}}
+endsnippet
+
+
+
+
+
+
+
+
+%%% Definitionen, Sätze, usw.
+
+snippet sdfn "Insert a definition environment" wbA
+\dfnstern{$1}{
+	${4:${VISUAL}}
+\}
+$0
+endsnippet
+
+snippet ssatz "Insert a claim environment" A
+\clmstern{$1}{
+	$2
+\}
+$0
+endsnippet
+
+snippet sthm "Insert a theorem environment" A
+\theostern{$1}{
+	$2
+\}
+$0
+endsnippet
+
+snippet slemma "Insert a lemma environment" bA
+\lemmastern{}{
+	$1
+\}
+$0
+endsnippet
+
+snippet skoroll "Insert a korollar environment" bA
+\corstern{}{
+	$4
+\}
+$0
+endsnippet
+
+snippet sbemerk "Insert a note environment" bA
+\ntstern{}{
+	$4
+\}
+$0
+endsnippet
+
+snippet snota "Insert a notation environment" bA
+\notastern{}{
+	$2
+}
+$0
+endsnippet
+
+snippet sbeispiel "Insert a beispiel environment without counter" bA
+\exstern{}{
+	$2
+}
+$0
+endsnippet
+
+snippet sfrage "Frage Umgebung einfügen" bA
+\qsstern{}{
+	$1
+}
+$0
+endsnippet
+
+snippet saufgabe "Aufgabe (Exercise) Umgebung einfügen" bA
+\aufgstern{}{
+	$4
+}
+$0
+endsnippet
+
+snippet slösung "Lösungsumgebung einfügen" bA
+\solustern{}{
+	$1
+}
+$0
+endsnippet
+
+snippet sprop "Propositionsumgebung einfügen" bA
+\propstern{}{
+	$4
+}
+$0
+endsnippet
+
+snippet sfolg "Folgerungsumgebung einfügen" bA
+\folgtstern{}{
+	$4
+}
+$0
+endsnippet
+
+
+
+
+
+snippet kdfn "Insert a definition environment" wbA
+\dfn{$1}{
+	${4:${VISUAL}}
+\}
+$0
+endsnippet
+
+snippet ksatz "Insert a claim environment" A
+\clm{$1}{
+	$2
+\}
+$0
+endsnippet
+
+snippet kthm "Insert a theorem environment" A
+\theo{$1}{
+	$2
+\}
+$0
+endsnippet
+
+snippet klemma "Insert a lemma environment" bA
+\lemma{}{
+	$1
+\}
+$0
+endsnippet
+
+snippet kkoroll "Insert a korollar environment" bA
+\cor{}{
+	$4
+\}
+$0
+endsnippet
+
+snippet kbemerk "Insert a note environment" bA
+\nt{}{
+	$4
+\}
+$0
+endsnippet
+
+snippet knota "Insert a notation environment" bA
+\nota{}{
+	$2
+}
+$0
+endsnippet
+
+snippet kbeispiel "Insert a beispiel environment without counter" bA
+\ex{}{
+	$2
+}
+$0
+endsnippet
+
+snippet kfrage "Frage Umgebung einfügen" bA
+\qs{}{
+	$1
+}
+$0
+endsnippet
+
+snippet kaufgabe "Aufgabe (Exercise) Umgebung einfügen" bA
+\aufg{}{
+	$4
+}
+$0
+endsnippet
+
+snippet klösung "Lösungsumgebung einfügen" bA
+\solu{}{
+	$1
+}
+$0
+endsnippet
+
+snippet kprop "Propositionsumgebung einfügen" bA
+\prop{}{
+	$4
+}
+$0
+endsnippet
+
+snippet kfolg "Folgerungsumgebung einfügen" bA
+\folg{}{
+	$4
+}
+$0
+endsnippet
+
+
+
+
+
+snippet dfn "Insert a definition environment" wbA
+\dfn{$1}{
+	\preplabel{${2:globalcounter}}%
+	\label{${2:globalcounter}:${3:zahl}}%
+	${4:${VISUAL}}
+\}
+$0
+endsnippet
+
+snippet satz "Insert a claim environment" A
+\clm{$1}{
+	\preplabel{${2:globalcounter}}%
+	\label{${2:globalcounter}:${3:zahl}}%
+	$4
+\}
+$0
+endsnippet
+
+snippet thm "Insert a theorem environment" A
+\theo{$1}{
+	\preplabel{${2:globalcounter}}%
+	\label{${2:globalcounter}:${3:zahl}}%
+	$4
+\}
+$0
+endsnippet
+
+snippet keinbew "Skippe das Beweis Zeichen" iA
+\renewcommand{\qedsymbol}{}
+endsnippet
+
+snippet bew "Custom proof environment in LaTeX" bA
+\begin{myproof}[${1:Beweis}]
+	$2
+\end{myproof}$0
+endsnippet
+
+snippet prf "Custom proof environment in LaTeX" bA
+\begin{myproof}[${1:Proof}]
+	$2
+\end{myproof}$0
+endsnippet
+
+
+snippet lemma "Insert a lemma environment" bA
+\lemma{}{
+	\preplabel{${1:globalcounter}}%
+	\label{${1:globalcounter}:${2:zahl}}%
+	$3
+\}
+$0
+endsnippet
+
+snippet koroll "Insert a korollar environment" bA
+\cor{}{
+	\preplabel{${2:globalcounter}}%
+	\label{${2:globalcounter}:${3:zahl}}%
+	$4
+\}
+$0
+endsnippet
+
+snippet bemerk "Insert a note environment" bA
+\nt{}{
+	\preplabel{${2:globalcounter}}%
+	\label{${2:globalcounter}:${3:zahl}}%
+	$4
+\}
+$0
+endsnippet
+
+snippet nota "Insert a notation environment" bA
+\nota{}{
+	$2
+}
+$0
+endsnippet
+
+snippet beispiel "Insert a beispiel environment" bA
+\ex{}{
+	\preplabel{${2:globalcounter}}%
+	\label{${2:globalcounter}:${3:zahl}}%
+	$4
+}
+$0
+endsnippet
+
+snippet frage "Frage Umgebung einfügen" bA
+\qs{}{
+	$1
+}
+$0
+endsnippet
+
+snippet aufgabe "Aufgabe (Exercise) Umgebung einfügen" bA
+\aufg{}{
+	\preplabel{${2:aufg}}%
+	\label{${2:aufg}:${3:zahl}}%
+	$4
+}
+$0
+endsnippet
+
+snippet lösung "Lösungsumgebung einfügen" bA
+\solu{}{
+	$1
+}
+$0
+endsnippet
+
+snippet prop "Propositionsumgebung einfügen" bA
+\prop{}{
+	\preplabel{${2:globalcounter}}%
+	\label{${2:globalcounter}:${3:zahl}}%
+	$4
+}
+$0
+endsnippet
+
+snippet folg "Folgerungsumgebung einfügen" bA
+\folg{}{
+	\preplabel{${2:globalcounter}}%
+	\label{${2:globalcounter}:${3:zahl}}%
+	$4
+}
+$0
+endsnippet
+
+snippet pdfeinfügen "PDF Einfügen" bA
+\includepdf[pages=-, fitpaper=true]{${1:${VISUAL}}}					% Alle Seiten, Seitengröße des PDFs übernehmen
+% Auch nützlich:
+% \includepdf[pages=-, scale=0.9, pagecommand={}]{${1:${VISUAL}}}  	% Seitenzahl/Kopfzeile beibehalten
+% \includepdf[pages=-, nup=2x1, landscape]{${1:${VISUAL}}} 			% zwei Seiten pro Blatt
+endsnippet
+
+snippet Extra "Extra Kapitel für TOC" bA
+\phantomsection
+\addcontentsline{toc}{extras}{${1:${VISUAL}}}
+\chapter*{${1:${VISUAL}}}
+endsnippet
+
+
+
+
+
+snippet breite "Breite einschränken auf schmaler für Beweis mit Enumerate" wA
+\begin{adjustwidth}{0pt}{4cm}
+	$1
+\end{adjustwidth}
+endsnippet
+
+snippet equation "Insert an equation environment" bA
+\begin{equation}
+	$1
+\end{equation}
+$0
+endsnippet
+
+snippet itm "Insert an itemize environment" bA
+\begin{itemize}
+	\item ${1:${VISUAL}}
+\end{itemize}
+endsnippet
+
+snippet comment "Create a comment environment" bA
+\begin{comment}
+	$1
+\end{comment}
+endsnippet
+
+snippet schaltt "Schaltung in circuitikz" iA 
+\begin{circuitikz}[every path/.style={thick}]
+	$1
+\end{circuitikz} $0
+endsnippet
+
+snippet mantikz "Tikz Hilfe Beispiele" iA 
+% Linie \draw (0,0) -- (2,0) -- (2,1);
+% Rechteck \draw (1,1) rectangle (1.5,1.5)
+% Kreis für Schnittstellen \node[circle, draw, thick, minimum size=5pt, inner sep=0pt, fill] at (2,0) {};
+% Hohler Kreis für NOT (Kreis am Ende) \draw[-{Circle [open, scale=1.5]}] (4,1.25) -- (1.5,1.25); 
+% Schrift \node (variable) at (0, 4) {Text};
+% Variante 1 Signal \draw (variable) -- (2,4);
+% Variante 2 Signal \draw (0, 3) node [left] {A};
+endsnippet
+
+snippet `(\d+(.\d+)?),\s*(\d+(.\d+)?)\s*(gatterr)` "Gatter nach rechts" iAm
+\draw (``rv = parseFloat(m[1])``, ``rv = parseFloat(m[3]) - 0.125``) rectangle (``rv = parseFloat(m[1])+0.75``, ``rv = parseFloat(m[3]) + 0.625``);
+\node (gatter) at (``rv = parseFloat(m[1])+0.375``, ``rv = parseFloat(m[3])+0.25``) {$1};
+\draw${2:[-{Circle [open, scale=1.5]\}]} (``rv = parseFloat(m[1]) + 1.5``, ``rv = parseFloat(m[3]) + 0.25``) -- (``rv = parseFloat(m[1]) + 0.75``, ``rv = parseFloat(m[3]) + 0.25``); 
+endsnippet
+
+snippet `(\d+(.\d+)?),\s*(\d+(.\d+)?)\s*(punkttikz)` "Knotenpunkt für Verkabelung" iA 
+\node[circle, draw, thick, minimum size=5pt, inner sep=0pt, fill] at (``rv = m[1]``, ``rv = m[3]``) {};$0
+endsnippet
+
+snippet `(?:(\d+\.\d+(\.\d+)?)|(?:\((\d+\.\d+(\.\d+)?)\)))\s*ref` "Label für equation aus align" iA
+(\ref{eq:``rv = m[3] ?? m[1]``})
+endsnippet
+
+snippet `(\((\d+\.\d+(\.\d+)?))\)\s*sara` "Ersetze" iA
+``rv = m[2]``
+endsnippet
+
+
+snippet tikz "tikzpicture" wA
+\begin{figure}[H]
+	\centering
+	\begin{extbild}
+	\begin{tikzpicture}[scale=1]
+		$1
+	\end{tikzpicture}
+	\end{extbild}
+\end{figure}
+endsnippet
+
+snippet punkttikz "Knotenpunkt für Verkabelung" iA 
+\node[circle, draw, thick, minimum size=5pt, inner sep=0pt, fill] at ($1, $2) {}; $0
+endsnippet
+
+snippet draww "draw Befehl tikz" Ai
+\draw $1 ; 
+endsnippet
+
+snippet drawto "draw Befehl tikz" iA
+\draw[->] ($1) -- ($2) $3; 
+endsnippet
+
+snippet drawmap "draw Befehl tikz" iA
+\draw[|->] ($1) -- ($2) $3; 
+endsnippet
+
+snippet drawbend "draw Befehl tikz" iA
+\draw[->] ($1) to[bend right=20] ($2) $3; 
+endsnippet
+
+snippet nodemi "Node midway" iA
+node[midway, $1] {${2:${VISUAL}}}
+endsnippet
+
+snippet nodeab "Node midway" iA
+node[midway, above] {${2:${VISUAL}}}
+endsnippet
+snippet nodear "Node midway" iA
+node[midway, above right] {${2:${VISUAL}}}
+endsnippet
+snippet noderi "Node midway" iA
+node[midway, right] {${2:${VISUAL}}}
+endsnippet
+snippet nodebr "Node midway" iA
+node[midway, below right] {${2:${VISUAL}}}
+endsnippet
+snippet nodebe "Node midway" iA
+node[midway, below] {${2:${VISUAL}}}
+endsnippet
+snippet nodebl "Node midway" iA
+node[midway, below left] {${2:${VISUAL}}}
+endsnippet
+snippet nodele "Node midway" iA
+node[midway, left] {${2:${VISUAL}}}
+endsnippet
+snippet nodeal "Node midway" iA
+node[midway, above left] {${2:${VISUAL}}}
+endsnippet
+
+snippet variablee "Variable tikz" iA
+\pgfmathsetmacro{${1:\\variable}}{${2:${VISUAL}}}
+endsnippet
+
+snippet nodee "node Befehl tikz" iA 
+\node (${1:name}) at (${2:0,0}) {$3};
+endsnippet
+
+snippet komdia3 "Kommutatives Diagramm" iA
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[scale=1]
+		% Verwende dashed, |->, to[bend right=20], ...
+		\node (X) at (0,0) {$1};
+        \node (Y) at (4,0) {$2};
+        \node (Z) at (2,-2) {$3};
+        \draw[->] (X) -- (Y) node[midway, above] {$4}; 
+        \draw[->] (X) -- (Z) node[midway, below left] {$5}; 
+        \draw[->] (Y) -- (Z) node[midway, below right]{$6}; 
+	\end{tikzpicture}
+\end{figure}
+endsnippet
+
+snippet komdia4 "Kommutatives Diagramm" iA
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[scale=1]
+		% Verwende dashed, |->, to[bend right=20], ...
+		\node (a) at (0,0) {$1};		% unten links
+        \node (b) at (3,0) {$2};		% unten rechts
+        \node (c) at (3,3) {$3};		% oben rechts
+        \node (d) at (0,3) {$4};		% oben links
+        \draw[->] (a) -- (b) node[midway, below] {$5};
+        \draw[->] (c) -- (b) node[midway, right] {$6};
+        \draw[->] (d) -- (c) node[midway, above] {$7};
+        \draw[->] (d) -- (a) node[midway, left] {$8};
+	\end{tikzpicture}
+\end{figure}
+endsnippet
+
+snippet BwU "B([w]_H, U)" iAm
+B([w]_H, U)
+endsnippet
+
+snippet BxU "B([w]_H, U)" iAm
+B([${1:v}]_H, U)
+endsnippet
+
+
+snippet center "Center Umgebung" iA 
+\begin{center}
+	$1
+\end{center} $0
+endsnippet
+
+snippet graph "Start with an empty TikZ graph" A
+\begin{minipage}{0.45\\textwidth}
+	\preplabel{${2:globalcounter}}%
+	\label{${2:globalcounter}:${3:zahl}}%
+	$4
+	\begin{tikzpicture}
+		[scale=.6]
+		$0
+	\end{tikzpicture}
+	\captionof{figure}{${1:Graph}}
+\end{minipage}
+endsnippet
+
+snippet funktionplot "Funktionsgraph von x^2 in tikz" A
+\begin{tikzpicture}
+  \begin{axis}[
+    axis lines = middle, % Achsen mittig zeichnen
+    xlabel = $x$, % x-Achsen-Beschriftung
+    ylabel = $y$, % y-Achsen-Beschriftung
+    xmin=-5, xmax=5, % Bereich für x
+    ymin=0, ymax=25, % Bereich für y
+    =-5:5, % x-Bereich für die Funktion
+    samples=100, % Anzahl der Punkte für den Graphen
+    ]
+    \addplot[blue, thick] {x^2}; % Plot der Funktion y = x^2
+  \end{axis}
+\end{tikzpicture}
+endsnippet
+
+snippet knoten "Add a vertex to the TikZ graph" A
+\Vertex[x=${1:0}, y=${2:0}]{${3:A}}
+$0
+endsnippet
+
+snippet kante "Add an edge between vertices in the TikZ graph" A
+\Edge[](${1:A})(${2:B})
+$0
+endsnippet
+
+snippet gerichtett "Der Kantenstyle wird gerichtet" A
+\tikzstyle{EdgeStyle}=[pre${1:, bend right}]
+$0
+endsnippet
+
+snippet ungerichtet "Der Kantenstyle wird ungerichtet"
+\tikzstyle{EdgeStyle}=[-${1:, bend right}]
+$0
+endsnippet
+
+snippet altaltneuesdok "LaTeX template for report document class with dynamic title and date" bA
+\documentclass[12pt]{report}
+
+\input{~/dotfiles/tex/templates/input.tex}
+
+\WarningFilter{caption}{}
+
+\usepackage{tkz-graph}
+\usepackage{caption}
+\usepackage{stackengine}
+
+
+\title{${1:Titel}}
+\author{Johannes Peters}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\lhead{Johannes Peters}
+\chead{${1:Titel}}
+\rhead{${2:Semester}}
+
+\setlength{\parindent}{0pt}
+\countergroup${3:A}
+
+$0
+
+
+
+\end{document}
+endsnippet
+
+
+snippet altneuesdok "LaTeX template for report document class with dynamic title and date" bA
+\documentclass[12pt]{report}
+
+\input{~/dotfiles/tex/${1:202501}/input.tex}
+
+\WarningFilter{caption}{}
+
+\title{${2:Titel}}
+\author{Johannes Peters}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\lhead{Johannes Peters}
+\chead{\hyperlink{toc}{${2:Titel}}}
+\rhead{${3:Semester}}
+
+\setlength{\parindent}{0pt}
+\countergroup${4:A}
+
+$0
+
+
+
+\end{document}
+endsnippet
+
+snippet neuesdok "LaTeX template für Vorlesung" bA
+\documentclass[12pt]{report}
+
+\input{~/dotfiles/tex/${1:2026-2027}/${2|input,input-en|}.tex}
+
+
+\title{${3:Titel}}
+\author{Johannes Peters}
+
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\lhead{Johannes Peters}
+\chead{\hyperlink{toc}{${3:Titel}}}
+\rhead{${4:Semester}}
+
+\countergroup${5:A}
+
+
+
+\includeall{Vorlesungen} % Alle Dateien namens 01.tex, 02.tex, ... 99.tex im Ordner Vorlesungen werden eingebunden. 
+$0
+
+
+\printindex
+
+\end{document}
+endsnippet
+
+snippet index "Index" iA
+\index{$1}
+endsnippet
+
+snippet label "Erstellt ein Label an dieser Stelle auf das mit ref zugegriffen werden kann" A
+\preplabel{${1:globalcounter}}%
+\label{${1:globalcounter}:${2:zahl}}%
+$0
+endsnippet
+
+snippet eqlab "Label für align equation" iA
+\label{eq:${1:${VISUAL}}}
+endsnippet
+
+snippet reff "Erstellt die Verlinkung zu einem Label" Ai
+\ref{${1:globalcounter}:$2}$0
+endsnippet
+
+snippet counter "Stellt einen gewünschten Counter auf die gewünschte Zahl innerhalb eines Kapitels" wA
+\setcounter{${1:globalcounter}}{$2}$0
+endsnippet
