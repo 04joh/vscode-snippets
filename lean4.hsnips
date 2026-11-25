@@ -15,11 +15,12 @@ const upper = {
     nu:"Ν", xi:"Ξ", omicron:"Ο", pi:"Π", rho:"Ρ", sigma:"Σ",
     tau:"Τ", upsilon:"Υ", phi:"Φ", chi:"Χ", psi:"Ψ", omega:"Ω",
     // Ausnahmen
-    gammaa:"Γ", lamm:"Λ" };
+    gammaa:"Γ", lamm:"Λ", muu:"Μ" };
 const names = Object.keys(greek).join("|");
 endglobal
 // Ausnahmen (Trigger vom Snippet muss angepasst werden und angepasster name ganz oben in global ergänzt werden):
 // Gammaa statt Gamma
+// Muu statt Mu
 // lamm/Lamm zusätzlich zu lambda/Lambda
 // muu statt mu
 // nuu statt nu
@@ -42,11 +43,12 @@ endsnippet
 
 // Griechische Buchstaben
 
-snippet `\b(alpha|beta|gamma|delta|eps|zeta|eta|theta|iota|kappa|lambda|lamm|muu|nuu|xi|omicron|pii|rho|sigma|tauu|upsilon|phi|chi|psi|omegaa|Alpha|Beta|Gammaa|Delta|Eps|Zeta|Eta|Theta|Iota|Kappa|Lambda|Lamm|Mu|Nu|Xi|Omicron|Pi|Rho|Sigma|Tau|Upsilon|Phi|Chi|Psi|Omega)` "Griechische Buchstaben" iA
+snippet `\b(alpha|beta|gamma|delta|eps|zeta|eta|theta|iota|kappa|lambda|lamm|muu|nuu|xi|omicron|pii|rho|sigma|tauu|upsilon|phi|chi|psi|omegaa|Alpha|Beta|Gammaa|Delta|Eps|Zeta|Eta|Theta|Iota|Kappa|Lambda|Lamm|Muu|Nu|Xi|Omicron|Pi|Rho|Sigma|Tau|Upsilon|Phi|Chi|Psi|Omega)` "Griechische Buchstaben" iA
 ``rv = (m[1][0] === m[1][0].toUpperCase()) ? upper[m[1].toLowerCase()] : greek[m[1].toLowerCase()]``
 endsnippet
 // Ausnahmen (Trigger vom Snippet muss angepasst werden und angepasster name ganz oben in global ergänzt werden):
 // Gammaa statt Gamma
+// Muu statt Mu
 // lamm/Lamm zusätzlich zu lambda/Lambda
 // muu statt mu
 // nuu statt nu
