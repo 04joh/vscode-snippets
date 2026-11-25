@@ -204,6 +204,10 @@ snippet `([⁰¹²³⁴⁵⁶⁷⁸⁹])(\d+)` "Weitere hochgestellte Ziffern" i
 ``rv = m[1] + [...m[2]].map(d => "⁰¹²³⁴⁵⁶⁷⁸⁹"[d]).join("")``
 endsnippet
 
+snippet invs "Inverses" iA
+⁻¹
+endsnippet
+
 
 
 // Operatoren
