@@ -184,6 +184,10 @@ snippet `\b(?:smul|bub)` "Scalar Multiplikation / Mul Action" iA
 •
 endsnippet
 
+snippet `\b(?:quot|bigsolidus)` "Quotient, nicht /, sondern ⧸" iA
+⧸
+endsnippet
+
 
 
 // Indizes und Exponenten
