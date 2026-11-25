@@ -178,6 +178,10 @@ snippet teilt "Teilt, nicht |, sondern ∣" iA
 ∣
 endsnippet
 
+snippet `\b(?:smul|bub)` "Scalar Multiplikation / Mul Action" iA
+•
+endsnippet
+
 
 
 // Indizes und Exponenten
